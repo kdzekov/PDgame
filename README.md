@@ -3,7 +3,7 @@ Multi-agent prisoner's dilemma game written on ZMQ web socket protocol.
 
 In a few words, this project is about multi-agent prisoner's dilemma game using web socket protocol. 
 The programme is
-written in Php5. The socket protocol is Ratchet/ZMQ, written also in php. There are three important files regarding the
+written in Php5. The socket protocol is Ratchet/ZMQ, written also in php. There are four important files regarding the
 software:
 
 - bin/PDG_server.php, standalone server engine that calls the server side script that handles client actions like: connections
