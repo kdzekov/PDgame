@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="assets/js/autobahn.js"></script>
+        <script>
+        var conn = "";
+        conn=new WebSocket('ws://127.0.0.1:8080');
+       /* var connection = new autobahn.Connection({
+            url: "ws://127.0.0.1:8080/ws",
+            realm: "votesapp"
+        });*/
+    
+        function connect()
+        {
+            conn=new WebSocket('ws://127.0.0.1:8080');
+
+        }
+
+        function send_m()
+        {
+            var tm = document.getElementById("msg_txt").value;
+            conn.send(tm);
+        }
+        
+        conn.onopen = function(e) 
+        {
+            console.log("Connection established!");
+           // console.log(e.data);
+        };
+
+        conn.onmessage = function(e) 
+        {
+            console.log(e.data);
+        };
+ </script>
+    </head>
+    <body>
+        <div>
+            <input type="button" value="Connect" onclick="connect()">
+        </div>
+        <div>
+            <input type="text" id="msg_txt"><br>
+            <input type="button" id="msg_btn" value="Send message" onclick="send_m()">
+        </div>
+    </body>
+</html>

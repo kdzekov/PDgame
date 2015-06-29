@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <script src="assets/js/autobahn.js"></script>
+        <script>
+
+            var wsUri = 'ws://127.0.0.1:8080/koko';
+            var socket;
+            var connected = false;
+            
+            function connect()
+            {
+                
+                socket = new WebSocket(wsUri);
+                document.getElementById("connect").disabled = true;
+                
+                socket.onopen = function(e) 
+                {
+                    console.log("Connection established!");  
+                    connnected = true;   
+                    
+                    document.getElementById("information_block").innerHTML = 'Connection to the server is established! ';
+                    
+                    //send user to the server
+                    var user = document.getElementById("msg_txt").value;
+                    socket.send(user);
+                    
+                    document.getElementById("msg_txt").disabled = true;
+                };
+                socket.onmessage = function(e) 
+                {
+                    var code = e.data.substr(0,3);
+                    
+                    switch(code)
+                    {
+                        case 'inf': 
+                            document.getElementById("information_block").innerHTML = e.data;
+                            break;
+                            
+                        case 'new':
+                            setTimeout(function(){document.getElementById("information_block").innerHTML = e.data;},2500);
+                            break;
+                            
+                        case 'pff':
+                                var st = e.data;
+                                st = st.substring(4);
+                                var pff = st.split('-');
+                                
+                                document.getElementById("payoff_you_R").innerHTML = pff[0];
+                                document.getElementById("payoff_opp_R").innerHTML = pff[0];
+                                document.getElementById("payoff_you_S").innerHTML = pff[1];
+                                document.getElementById("payoff_opp_T").innerHTML = pff[2];
+                                document.getElementById("payoff_you_T").innerHTML = pff[2];
+                                document.getElementById("payoff_opp_S").innerHTML = pff[1];
+                                document.getElementById("payoff_you_P").innerHTML = pff[3];
+                                document.getElementById("payoff_opp_P").innerHTML = pff[3];
+                                
+                                break;
+                        default:
+                             console.log(e.data);
+                    }
+                };
+            }
+            
+            function send_m()
+            {
+                var tm = document.getElementById("msg_txt").value;
+               // console.log(tm);
+                socket.send(tm);
+            }
+            
+            function make_choice(move)
+            {
+                //alert(move);
+                //socket.send(tm);
+                
+                if (typeof socket !== "undefined")
+                {
+                    socket.send(move);
+                    document.getElementById("information_block").innerHTML = "You chose to play "+move+". Waith for yor opponent's move...";
+                }
+                else
+                {
+                    document.getElementById("information_block").innerHTML = "You are not connected! First, connect to the server!";
+                }
+            }
+            
+            function disconnect()
+            {
+                socket.close();
+                document.getElementById("connect").disabled = false;
+                connected = false;
+                document.getElementById("information_block").innerHTML = 'You are disconnected from the server!'; 
+            }
+            
+            function test()
+            {    
+               var teststr = 'test';
+               socket.send(teststr);
+            }
+ </script>
+    </head>
+    <body>
+        <div id="_login_container">
+            <div style="margin-top: 10px; margin-left: 10px; margin-right: 10px; margin-bottom: 10px">
+                Username: <input type="text" id="msg_txt" size="10"><br>
+                <!-- <input type="button" id="msg_btn" value="Send message" onclick="send_m()"> -->
+            </div>
+            <div style="margin-top: 10px; margin-left: 10px; margin-right: 10px; margin-bottom: 10px">
+                <input type="button" value="Connect" id="connect" onclick="connect()">
+                <input type="button" value="Disconnect" onclick="disconnect()">
+            </div>
+        </div>
+        <form name="pdform" id="pdform" action="index.php" style="margin-top: 55px">
+    <table id="main_table">
+    <tbody>
+        <tr style="height:25px">
+            <td colspan="5"></td>
+        </tr>
+        <tr>
+            <td colspan="2" rowspan="2" width="50px"></td>
+            <td colspan="2"><span id="opponent_block">(Другиот играч)</span></td>
+            <td width="250px" rowspan="4"></td>
+        </tr>
+        <tr  style="height: 35px">
+            <!--<td colspan="2"></td>-->
+            <td><input type="button" value="А" name="c_o_button" style="width:8em; height: 3em; background-color: orange"></td>
+            <td><input type="button" value="Б" name="d_o_button" style="width:8em; height: 3em; background-color: orange" ></td>
+            <!--<td></td>-->
+        </tr>
+        <tr>
+            <td rowspan="2" class="td_right">(Вие)</td>
+            <td class="td_right"><input type="button" name="c_button" value="А" style="width:8em; height: 3em; background-color: greenyellow" onclick="make_choice('C')"></td>
+             <!--<td class="td_right"><input type="button" name="c_button" value="А" style="width:8em; height: 3em; background-color: greenyellow" onclick="make_choice(1)"></td>-->
+            <td>
+                <table width="100%">
+                    <tr>
+                        <td id="payoff_you_R" class="payoff_you">35</td>
+                        <td id="payoff_opp_R" class="payoff_opponent">35</td>
+                    </tr>
+                </table>
+            </td>
+            <td>
+                 <table width="100%">
+                    <tr>
+                        <td id="payoff_you_S" class="payoff_you">3</td>
+                        <td id="payoff_opp_T" class="payoff_opponent">40</td>
+                    </tr>
+                </table>
+            
+            </td>
+           <!-- <td></td> -->
+        </tr>
+        <tr>
+            <!--<td>d1</td>-->
+            <td class="td_right"><input type="button" name="d_button" value="Б" style="width:8em; height: 3em; background-color: greenyellow" onclick="make_choice('D')"></td>
+            <!--<td class="td_right"><input type="button" name="d_button" value="Б" style="width:8em; height: 3em; background-color: greenyellow" onclick="make_choice(2)"></td>-->
+            <td>
+                <table width="100%">
+                    <tr>
+                        <td id="payoff_you_T" class="payoff_you">40</td>
+                        <td id="payoff_opp_S" class="payoff_opponent">3</td>
+                    </tr>
+                </table>
+            </td>
+            <td>
+                <table width="100%">
+                    <tr>
+                        <td id="payoff_you_P" class="payoff_you">7</td>
+                        <td id="payoff_opp_P" class="payoff_opponent">7</td>
+                    </tr>
+                </table>
+            </td>
+            <!--<td></td>-->
+        </tr>
+        <tr style="height: 30px">
+            <td colspan="5"></td>
+        </tr>
+        <tr>
+            <!--<td>Information: </td>-->
+            <td>Информација: </td>
+            <td colspan="4"><span id="information_block">informacija za tekot na igrata</span></td>
+        </tr>
+        <tr>
+            <!--<td>Total: </td>-->
+            <td>Вкупно: </td>
+            <td colspan="4">Vkupen broj na poeni
+                <input type="hidden" name="move" id="move">
+                <input type="hidden" name="fname" id="fname" value="<?php echo $fname; ?>">
+                <input type="hidden" name="game_condition" id="game_condition">
+            </td>
+        </tr>
+    </tbody>
+</table>
+            <input type="button" value="test" onclick="test()"> 
+</form>
+    </body>
+</html>

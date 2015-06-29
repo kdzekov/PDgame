@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Get Reverse IP</title>
+</head>
+<body>
+    
+Please enter a domain name
+<!--INPUT-->
+<!--<input type="text" id="searchip">-->
+<input type="button" value="Start Server" id="start_server" onclick="showHint()">
+
+<!--OUTPUT-->
+<div id="resultip"></div>
+
+<script>
+
+function showHint(str) 
+{
+
+  var xmlhttp=new XMLHttpRequest();
+  xmlhttp.onreadystatechange=function() 
+  {
+    if (xmlhttp.readyState==4 && xmlhttp.status==200) 
+    {
+      document.getElementById("txtHint").innerHTML=xmlhttp.responseText;
+    }
+  }
+  //xmlhttp.open("POST","bin/simle_server.php",true);
+  xmlhttp.open("POST","simle_server.php",true);
+  xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+  xmlhttp.send("server=start");
+}
+
+    /*$(document).ready(function() {
+        $('#start_server').click(function(){
+            alert("djkkjherw");
+            $.ajax({
+
+                type: "GET",
+                url: "src/MyApp/PD.php",
+                //data: 'ip=' + $('#searchip').val(),
+                data: 'ip=' + 'something..',
+                success: function(msg){
+                    $('#resultip').html(msg);
+                }
+
+            }); // Ajax Call
+        }); //event handler
+    });*/ //document.ready
+</script>
+<p>Feedback: <span id="txtHint"></span></p>
+</body>
+</html>
