@@ -1,9 +1,8 @@
 # PDgame
 Multi-agent prisoner's dilemma game written on ZMQ web socket protocol.
 
-In a few words, this project is about multi-agent prisoner's dilemma game using web socket protocol. 
-The programme is
-written in Php5. The socket protocol is Ratchet/ZMQ, written also in php. There are four important files regarding the
+In a few words, this project is about multi-agent prisoner's dilemma game. The purpose of the software is to conduct PD game through internet for experimental purposes or entertinment. The advantage over the apropriate software on LAN networks is that much more participants can participate so that more reliable data can be collected. The programme uses  web socket protocol.
+It is written in Php5. The socket protocol is Ratchet/ZMQ, written also in php. There are four important files regarding the
 software:
 
 - bin/PDG_server.php, standalone server engine that calls the server side script that handles client actions like: connections
